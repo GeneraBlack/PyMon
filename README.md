@@ -72,23 +72,34 @@ Built with **Python 3.11+** and **PySide6 (Qt 6)**, PyMon provides a dark-themed
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Installation
 
-### Prerequisites
-- **Python 3.11 or newer** – [Download](https://www.python.org/downloads/)
+### Option A: Windows Installer (empfohlen für Benutzer)
+
+1. Gehe zu [**Releases**](https://github.com/GeneraBlack/PyMon/releases/latest)
+2. Lade eine der beiden Varianten herunter:
+   - **`PyMon-x.x.x-Setup.exe`** – Installer mit Startmenü-Eintrag, Desktop-Verknüpfung & optionalem Autostart
+   - **`PyMon-x.x.x-Windows-Portable.zip`** – Portable Version (einfach entpacken und starten)
+3. Starte **PyMon.exe**
+4. Beim ersten Start öffnet sich automatisch der **Einrichtungsassistent**, der dich Schritt für Schritt durch die ESI-API-Einrichtung führt 🧙
+
+> **Das war's!** Du brauchst kein Python, kein Git, keine Kommandozeile.
+
+### Option B: Aus dem Quellcode (für Entwickler)
+
+#### Voraussetzungen
+- **Python 3.11 oder neuer** – [Download](https://www.python.org/downloads/)
 - **Git** – [Download](https://git-scm.com/downloads)
 
-### 1. Clone & Install
-
 ```bash
-# Clone the repository
+# Repository klonen
 git clone https://github.com/GeneraBlack/PyMon.git
-cd pymon
+cd PyMon
 
-# Create virtual environment (recommended)
+# Virtuelle Umgebung erstellen (empfohlen)
 python -m venv .venv
 
-# Activate it
+# Aktivieren
 # Windows PowerShell:
 .venv\Scripts\Activate.ps1
 # Windows CMD:
@@ -96,112 +107,114 @@ python -m venv .venv
 # Linux/macOS:
 source .venv/bin/activate
 
-# Install PyMon with all dependencies
+# PyMon installieren
 pip install -e .
-```
 
-### 2. Register EVE Application
-
-1. Go to [EVE Developers](https://developers.eveonline.com/applications)
-2. Create a new application:
-   - **Connection Type**: Authentication & API Access
-   - **Callback URL**: `http://localhost:8182/callback`
-   - **Scopes**: Select all ESI scopes for full functionality
-3. Copy the **Client ID**
-
-### 3. Run PyMon
-
-```bash
+# Starten
 pymon
 ```
 
-On first launch:
-1. Open **Settings** (⚙️ in the toolbar)
-2. Paste your **Client ID**
-3. Click **Add Character** → authenticate via EVE SSO in your browser
-4. The SDE (game data) will be downloaded automatically
+---
+
+## 🔑 Ersteinrichtung (ESI API Key)
+
+Beim **ersten Start** führt dich der eingebaute **Einrichtungsassistent** automatisch durch diese Schritte:
+
+1. Öffne das [EVE Developer Portal](https://developers.eveonline.com/applications)
+2. Erstelle eine neue Application:
+   - **Connection Type**: `Authentication & API Access`
+   - **Callback URL**: `http://localhost:8182/callback`
+   - **Scopes**: Alle auswählen (oder nur die gewünschten)
+3. Kopiere die **Client ID** und füge sie im Wizard ein
+4. Fertig! Klicke auf **"Charakter hinzufügen"** und logge dich via EVE SSO ein
+
+> 💡 Du kannst den Einrichtungsassistenten jederzeit über **Hilfe → Einrichtungsassistent** erneut aufrufen.
 
 ---
 
-## 🔄 Updating
+## 🔄 Aktualisierung
 
+### Installer-Version
+PyMon prüft beim Start automatisch auf Updates. Alternativ lade einfach den neuesten Installer von der [Releases-Seite](https://github.com/GeneraBlack/PyMon/releases) herunter.
+
+### Quellcode-Version
 ```bash
-cd pymon
+cd PyMon
 git pull
 pip install -e .
 ```
 
-That's it! Your settings and character data are preserved.
+Deine Einstellungen und Charakterdaten bleiben erhalten.
 
 ---
 
-## 🏗️ Development
+## 🏗️ Entwicklung
 
 ```bash
-# Install with dev dependencies
+# Mit Dev-Dependencies installieren
 pip install -e ".[dev]"
 
-# Run tests
+# Tests ausführen
 pytest -v
 
 # Lint
 ruff check pymon/
 
-# Type check
+# Type-Check
 mypy pymon/
 ```
 
-### Project Structure
+### Projektstruktur
 
 ```
 pymon/
-├── pymon/                  # Main package
-│   ├── __main__.py         # Entry point
-│   ├── core/               # App lifecycle, config, database
+├── pymon/                  # Hauptpaket
+│   ├── __main__.py         # Einstiegspunkt
+│   ├── core/               # App-Lifecycle, Config, Datenbank
 │   ├── auth/               # EVE SSO OAuth2 (PKCE)
-│   ├── api/                # 30 ESI API modules (80+ endpoints)
-│   ├── sde/                # Static Data Export (SQLite, 65+ tables)
-│   ├── models/             # Domain models (dataclasses)
-│   ├── services/           # Business logic, name resolution, market
-│   └── ui/                 # PySide6 GUI (25+ widgets)
-├── tests/                  # Test suite
-├── pyproject.toml          # Dependencies & build config
+│   ├── api/                # 30 ESI API Module (80+ Endpunkte)
+│   ├── sde/                # Static Data Export (SQLite, 65+ Tabellen)
+│   ├── models/             # Datenmodelle (Dataclasses)
+│   ├── services/           # Business-Logik, Name Resolution, Markt
+│   └── ui/                 # PySide6 GUI (25+ Widgets)
+├── tests/                  # Testsuite
+├── pyproject.toml          # Dependencies & Build-Konfiguration
 └── README.md
 ```
 
 ---
 
-## 📦 Building a Standalone Executable (Windows)
+## 📦 Standalone-EXE bauen (Windows)
 
 ```bash
 pip install -e ".[build]"
 pyinstaller pymon.spec
 ```
 
-The executable will be in `dist/PyMon/`.
+Die fertige EXE findest du in `dist/PyMon/`.
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Konfiguration
 
-All data is stored in your local app data directory:
+Alle Daten werden lokal in deinem App-Verzeichnis gespeichert:
 - **Windows**: `%LOCALAPPDATA%\PyMon\PyMon\`
 - **Linux**: `~/.local/share/PyMon/`
 - **macOS**: `~/Library/Application Support/PyMon/`
 
-| Setting | Description |
-|---------|-------------|
-| Client ID | Your EVE application Client ID |
-| Refresh Interval | ESI polling interval (minutes) |
-| Tray Notifications | Skill complete / Queue empty alerts |
-| E-Mail | SMTP settings for email alerts |
-| Cloud Sync | Cloud folder for backup/restore |
+| Einstellung | Beschreibung |
+|---|---|
+| Client ID | Deine EVE Application Client ID |
+| Aktualisierungsintervall | ESI-Abfrageintervall (Minuten) |
+| Tray-Benachrichtigungen | Skill fertig / Queue leer Benachrichtigungen |
+| E-Mail | SMTP-Einstellungen für E-Mail-Alerts |
+| Cloud Sync | Cloud-Ordner für Backup/Restore |
 
 ---
 
-## 📄 License
+## 📄 Lizenz
 
-Licensed under the [Apache License 2.0](LICENSE).
+Lizenziert unter der [Apache License 2.0](LICENSE).
 
 ## 🙏 Credits
 
