@@ -29,13 +29,25 @@ jobs:
       - name: Build executable
         run: pyinstaller pymon.spec --noconfirm
 
-      - name: Create ZIP archive
-        run: Compress-Archive -Path dist/PyMon/* -DestinationPath PyMon-${{ github.ref_name }}-Windows.zip
+      - name: Create ZIP archive (portable)
+        run: Compress-Archive -Path dist/PyMon/* -DestinationPath PyMon-${{ github.ref_name }}-Windows-Portable.zip
+
+      # ── Windows Installer (Inno Setup) ───────────────────────
+      - name: Build Windows Installer
+        run: |
+          # Update version in installer script from tag
+          $version = "${{ github.ref_name }}".TrimStart("v")
+          (Get-Content installer.iss) -replace '#define MyAppVersion   ".*"', ('#define MyAppVersion   "' + $version + '"') | Set-Content installer.iss
+          (Get-Content installer.iss) -replace 'OutputBaseFilename=PyMon-.*-Setup', ('OutputBaseFilename=PyMon-' + $version + '-Setup') | Set-Content installer.iss
+          # Inno Setup is pre-installed on windows-latest runners
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer.iss
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: PyMon-${{ github.ref_name }}-Windows.zip
+          files: |
+            PyMon-${{ github.ref_name }}-Windows-Portable.zip
+            installer_output/PyMon-*-Setup.exe
           generate_release_notes: true
           draft: false
           prerelease: false
