@@ -24,10 +24,10 @@ from PySide6.QtWidgets import (
 from pymon.api.esi_client import ESIClient
 from pymon.sde.database import SDEDatabase
 from pymon.services.market_service import (
-    MarketService,
-    TradeRecommendation,
     THE_FORGE,
     TRADE_HUBS,
+    MarketService,
+    TradeRecommendation,
 )
 from pymon.ui.dark_theme import Colors
 

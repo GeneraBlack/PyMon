@@ -4,31 +4,23 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from functools import partial
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from PySide6.QtCore import QTimer, Qt, Signal, QSize, QByteArray
-from PySide6.QtGui import QAction, QFont, QIcon, QPixmap, QImage
+from PySide6.QtCore import QByteArray, Qt, QTimer, Signal
+from PySide6.QtGui import QAction, QFont, QIcon, QPixmap
 from PySide6.QtWidgets import (
-    QDockWidget,
     QFileDialog,
-    QHBoxLayout,
     QLabel,
     QListWidget,
     QListWidgetItem,
     QMainWindow,
     QMenu,
     QMessageBox,
-    QProgressBar,
     QScrollArea,
     QSplitter,
-    QStackedWidget,
     QStatusBar,
     QSystemTrayIcon,
     QTabWidget,
-    QToolBar,
-    QTreeWidget,
-    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -41,33 +33,33 @@ from pymon.auth.token_manager import TokenManager
 from pymon.core.config import Config
 from pymon.core.database import Database
 from pymon.sde.database import SDEDatabase
-from pymon.services.character_service import CharacterService
-from pymon.services.name_resolver import NameResolver
-from pymon.services.notification_parser import parse_notification_type, get_notification_category
-from pymon.ui.data_browser_widget import DataBrowserWidget
-from pymon.ui.skill_planner_widget import SkillPlannerWidget
-from pymon.ui.certificate_browser_widget import CertificateBrowserWidget
-from pymon.ui.wallet_chart_widget import WalletChartWidget
-from pymon.ui.implant_calculator_widget import ImplantCalculatorWidget
-from pymon.ui.character_comparison_widget import CharacterComparisonWidget, CharSnapshot
-from pymon.ui.skills_pie_chart_widget import SkillsPieChartWidget
-from pymon.ui.owned_skill_books_widget import OwnedSkillBooksWidget
-from pymon.ui.api_tester_widget import APITesterWidget
-from pymon.ui.ship_browser_widget import ShipBrowserWidget
-from pymon.ui.path_finder_widget import PathFinderWidget
-from pymon.ui.schedule_editor_widget import ScheduleEditorWidget
-from pymon.ui.market_browser_widget import MarketBrowserWidget
-from pymon.ui.trade_tracker_widget import TradeTrackerWidget
-from pymon.ui.trade_advisor_widget import TradeAdvisorWidget
-from pymon.ui.dockable_tab_widget import DockableTabWidget
-from pymon.ui.window_manager import WindowManager, WindowLayout
-from pymon.ui.sidebar_nav import SidebarNav, TabGroup
-from pymon.ui.dark_theme import Colors
-from pymon.services.email_notifier import EmailNotifier
-from pymon.services.cloud_sync import CloudSync
 from pymon.sde.updater import SDEDownloadThread, SDEUpdateDialog
 from pymon.services.calendar_export import export_ics_file
+from pymon.services.character_service import CharacterService
+from pymon.services.cloud_sync import CloudSync
+from pymon.services.email_notifier import EmailNotifier
+from pymon.services.name_resolver import NameResolver
+from pymon.services.notification_parser import get_notification_category, parse_notification_type
 from pymon.services.update_checker import UpdateCheckThread, UpdateDialog
+from pymon.ui.api_tester_widget import APITesterWidget
+from pymon.ui.certificate_browser_widget import CertificateBrowserWidget
+from pymon.ui.character_comparison_widget import CharacterComparisonWidget, CharSnapshot
+from pymon.ui.dark_theme import Colors
+from pymon.ui.data_browser_widget import DataBrowserWidget
+from pymon.ui.dockable_tab_widget import DockableTabWidget
+from pymon.ui.implant_calculator_widget import ImplantCalculatorWidget
+from pymon.ui.market_browser_widget import MarketBrowserWidget
+from pymon.ui.owned_skill_books_widget import OwnedSkillBooksWidget
+from pymon.ui.path_finder_widget import PathFinderWidget
+from pymon.ui.schedule_editor_widget import ScheduleEditorWidget
+from pymon.ui.ship_browser_widget import ShipBrowserWidget
+from pymon.ui.sidebar_nav import SidebarNav, TabGroup
+from pymon.ui.skill_planner_widget import SkillPlannerWidget
+from pymon.ui.skills_pie_chart_widget import SkillsPieChartWidget
+from pymon.ui.trade_advisor_widget import TradeAdvisorWidget
+from pymon.ui.trade_tracker_widget import TradeTrackerWidget
+from pymon.ui.wallet_chart_widget import WalletChartWidget
+from pymon.ui.window_manager import WindowLayout, WindowManager
 
 logger = logging.getLogger(__name__)
 
@@ -617,7 +609,7 @@ class MainWindow(QMainWindow):
         # Use a simple colored pixmap as icon
         pixmap = QPixmap(32, 32)
         pixmap.fill(Qt.GlobalColor.transparent)
-        from PySide6.QtGui import QPainter, QBrush, QColor
+        from PySide6.QtGui import QBrush, QColor, QPainter
         painter = QPainter(pixmap)
         painter.setBrush(QBrush(QColor("{Colors.ACCENT}")))
         painter.setPen(Qt.PenStyle.NoPen)
@@ -646,7 +638,7 @@ class MainWindow(QMainWindow):
 
     def _update_eve_time(self) -> None:
         """Update EVE time display in status bar (UTC)."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         self.eve_time_label.setText(f"EVE: {now.strftime('%H:%M:%S')}")
 
     # ══════════════════════════════════════════════════════════════════
@@ -665,7 +657,7 @@ class MainWindow(QMainWindow):
         if reason == QSystemTrayIcon.ActivationReason.DoubleClick:
             self._on_tray_show()
 
-    def changeEvent(self, event) -> None:  # noqa: N802
+    def changeEvent(self, event) -> None:
         """Minimize to tray."""
         from PySide6.QtCore import QEvent
         if (
@@ -1181,7 +1173,7 @@ class MainWindow(QMainWindow):
             try:
                 fatigue = loop.run_until_complete(self.char_service.fetch_fatigue(cid))
                 if fatigue:
-                    now = datetime.now(timezone.utc)
+                    now = datetime.now(UTC)
                     expire = fatigue.jump_fatigue_expire_date
                     last_jump = fatigue.last_jump_date
                     if expire and expire > now:
@@ -1239,7 +1231,7 @@ class MainWindow(QMainWindow):
             # Check for completed skills (notification)
             self._check_skill_completion(queue)
 
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             total_remaining = 0.0
             total_sp_remaining = 0
             for entry in queue:
@@ -1372,7 +1364,7 @@ class MainWindow(QMainWindow):
         """Update window title with remaining training time."""
         if not self._training_finish:
             return
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         secs = max(0, (self._training_finish - now).total_seconds())
         if secs <= 0:
             self.setWindowTitle("PyMon – Training abgeschlossen!")
@@ -1860,12 +1852,12 @@ class MainWindow(QMainWindow):
                 loop.close()
                 # Build detail dialog on main thread
                 self._show_contract_detail.emit(contract, items)
-            except Exception as e:
+            except Exception:
                 logger.error("Contract detail error", exc_info=True)
 
         threading.Thread(target=_load, daemon=True).start()
 
-    def _display_contract_detail(self, contract, items) -> None:  # noqa: ANN001
+    def _display_contract_detail(self, contract, items) -> None:
         """Show a contract detail dialog (called on main thread via signal)."""
         from PySide6.QtWidgets import QDialog, QVBoxLayout
 
@@ -1884,7 +1876,7 @@ class MainWindow(QMainWindow):
             "courier": "🚚 Courier", "loan": "💰 Loan",
         }
 
-        html = "<h3>{icon}</h3>".format(icon=type_icons.get(contract.contract_type, contract.contract_type))
+        html = f"<h3>{type_icons.get(contract.contract_type, contract.contract_type)}</h3>"
         if contract.title:
             html += f"<p style='font-size:14px'><b>{contract.title}</b></p>"
         html += "<table>"
@@ -1988,7 +1980,7 @@ class MainWindow(QMainWindow):
                               5: "📋 Kopieren", 8: "💡 Invention", 9: "⚗️ Reaktion",
                               11: "🔄 Reverse Engineering"}
 
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
 
             # Separate active and completed
             active = [j for j in jobs if j.status == "active"]
@@ -2143,13 +2135,12 @@ class MainWindow(QMainWindow):
                     f"</table>"
                 )
 
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
 
             if sell:
                 html += "<h4>🟢 Sell Orders</h4><table style='width:100%'>"
                 html += "<tr><th>Gegenstand</th><th>Preis</th><th>Menge</th><th>Fortschritt</th><th>Standort</th><th>Ablauf</th></tr>"
                 for o in sorted(sell, key=lambda x: x.price * x.volume_remain, reverse=True):
-                    iss = _ts(o.issued, "%Y-%m-%d")
                     sell_loc = order_names.get(o.location_id, "") if o.location_id else ""
                     # Volume progress
                     vol_pct = 0
@@ -2173,7 +2164,6 @@ class MainWindow(QMainWindow):
                             expiry = f"<span style='color:{Colors.ORANGE}'>{days_left}d</span>"
                         else:
                             expiry = f"{days_left}d"
-                    total_val = o.price * o.volume_remain
                     html += (
                         f"<tr><td>{o.type_name}</td>"
                         f"<td style='text-align:right'>{o.price:,.2f}</td>"
@@ -2370,7 +2360,7 @@ class MainWindow(QMainWindow):
                     elif b.time_efficiency >= 20:
                         status = "🟣 TE max"
                     else:
-                        status = f"🔬 Forschbar"
+                        status = "🔬 Forschbar"
                     html += (
                         f"<tr><td>📗 {b.type_name}</td>"
                         f"<td>{me_bar}</td><td>{te_bar}</td>"
@@ -2513,7 +2503,7 @@ class MainWindow(QMainWindow):
                 self._update_pi.emit("<p>Keine PI-Kolonien.</p>")
                 return
 
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
 
             # Planet type icons and colors
             planet_icons = {
@@ -2778,7 +2768,7 @@ class MainWindow(QMainWindow):
                 # Calculate accumulated RP
                 total_rp = a.remainder_points
                 if a.started_at:
-                    days = (datetime.now(timezone.utc) - a.started_at).total_seconds() / 86400
+                    days = (datetime.now(UTC) - a.started_at).total_seconds() / 86400
                     total_rp += days * a.points_per_day
                 html += (
                     f"<tr><td>{aname}</td><td>{a.skill_type_name}</td>"
@@ -3310,6 +3300,7 @@ class MainWindow(QMainWindow):
         """Export the current tab's data as CSV."""
         import csv
         import re
+
         from PySide6.QtWidgets import QFileDialog
 
         # Get the current tab label
@@ -3587,7 +3578,7 @@ class MainWindow(QMainWindow):
     #  LIFECYCLE
     # ══════════════════════════════════════════════════════════════════
 
-    def closeEvent(self, event) -> None:  # noqa: N802
+    def closeEvent(self, event) -> None:
         """Cleanup on window close."""
         # If tray is available and not explicitly quitting, minimize to tray
         if self._tray_icon and not self._really_quit:
@@ -3630,7 +3621,6 @@ class MainWindow(QMainWindow):
                 pass
 
         # 3. Wait for background threads (max 3s total)
-        import threading
         alive = [t for t in self._bg_threads if t.is_alive()]
         if alive:
             logger.info("Waiting for %d background thread(s)...", len(alive))

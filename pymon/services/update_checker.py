@@ -9,10 +9,8 @@ from __future__ import annotations
 import logging
 import re
 import webbrowser
-from typing import Any
 
 import httpx
-
 from PySide6.QtCore import QThread, Signal
 from PySide6.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QWidget
 

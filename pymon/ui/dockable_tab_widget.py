@@ -14,19 +14,18 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from PySide6.QtCore import Qt, Signal, QPoint, QMimeData, QSize, QRect
-from PySide6.QtGui import QDrag, QMouseEvent, QPixmap, QPainter, QAction, QCloseEvent
+from PySide6.QtCore import QPoint, QRect, Qt, Signal
+from PySide6.QtGui import QAction, QCloseEvent, QMouseEvent
 from PySide6.QtWidgets import (
-    QTabWidget,
-    QTabBar,
-    QWidget,
-    QVBoxLayout,
+    QApplication,
     QHBoxLayout,
     QLabel,
-    QPushButton,
-    QSizePolicy,
-    QApplication,
     QMenu,
+    QPushButton,
+    QTabBar,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
 )
 
 logger = logging.getLogger(__name__)

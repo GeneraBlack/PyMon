@@ -146,7 +146,7 @@ def get_notification_category(notification_type: str) -> str:
         return "Strukturen"
     elif "sov" in t:
         return "Sovereignty"
-    elif "corp" in t or "char" in t and "app" in t:
+    elif "corp" in t or ("char" in t and "app" in t):
         return "Corporation"
     elif "kill" in t or "bounty" in t:
         return "Kampf"

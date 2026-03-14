@@ -814,7 +814,7 @@ def _import_child_tables(
         batches: dict[str, list[tuple[Any, ...]]] = {ct["table"]: [] for ct in child_defs}
         counts: dict[str, int] = {ct["table"]: 0 for ct in child_defs}
 
-        with open(jsonl_file, "r", encoding="utf-8") as f:
+        with open(jsonl_file, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if not line:
@@ -923,7 +923,7 @@ def _import_masteries(
     batch: list[tuple[int, int, int]] = []
     count = 0
 
-    with open(jsonl_file, "r", encoding="utf-8") as f:
+    with open(jsonl_file, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -1004,7 +1004,7 @@ def import_sde(sde_dir: str | Path, db_path: str | Path) -> None:
         batch: list[tuple[Any, ...]] = []
         count = 0
 
-        with open(jsonl_file, "r", encoding="utf-8") as f:
+        with open(jsonl_file, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if not line:

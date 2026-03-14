@@ -8,9 +8,7 @@ in SQLite so subsequent lookups are instant.
 
 from __future__ import annotations
 
-import asyncio
 import logging
-from typing import Any
 
 from pymon.api.esi_client import ESIClient
 from pymon.core.database import Database

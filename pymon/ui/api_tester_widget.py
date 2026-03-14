@@ -6,9 +6,9 @@ import asyncio
 import json
 import logging
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Signal
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QComboBox,
@@ -17,7 +17,6 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QPlainTextEdit,
     QPushButton,
-    QSplitter,
     QVBoxLayout,
     QWidget,
 )
@@ -188,7 +187,7 @@ class APITesterWidget(QWidget):
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             try:
-                start = datetime.now(timezone.utc)
+                start = datetime.now(UTC)
 
                 # Get token if needed
                 token = None
@@ -208,7 +207,7 @@ class APITesterWidget(QWidget):
                         self.esi.post(endpoint, token=token, json_data=json_data)
                     )
 
-                elapsed = (datetime.now(timezone.utc) - start).total_seconds()
+                elapsed = (datetime.now(UTC) - start).total_seconds()
 
                 # Format response
                 if isinstance(result, (dict, list)):
@@ -221,7 +220,7 @@ class APITesterWidget(QWidget):
                 header = (
                     f"// ✓ {method} {endpoint}\n"
                     f"// {elapsed:.2f}s | {lines} Zeilen | {size:,} Bytes\n"
-                    f"// {datetime.now(timezone.utc).strftime('%H:%M:%S UTC')}\n"
+                    f"// {datetime.now(UTC).strftime('%H:%M:%S UTC')}\n"
                     f"// {'🔒 Authentifiziert' if token else '🔓 Ohne Auth'}\n\n"
                 )
                 self._result_ready.emit(header + formatted)

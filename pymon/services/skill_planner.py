@@ -7,10 +7,9 @@ persisting skill plans.
 
 from __future__ import annotations
 
-import math
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from pymon.sde.database import SDEDatabase
@@ -79,7 +78,7 @@ class SkillPlan:
     """A named skill plan."""
     name: str
     entries: list[PlanEntry] = field(default_factory=list)
-    created: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def total_time_seconds(self) -> float:

@@ -12,7 +12,6 @@ import ssl
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import Any
 
 logger = logging.getLogger(__name__)
 

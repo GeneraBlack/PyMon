@@ -9,7 +9,7 @@ def test_esi_client_creation():
     """ESIClient can be instantiated."""
     client = ESIClient()
     assert client._cache == {}
-    assert client._client is None
+    assert callable(client._make_client)
 
 
 def test_esi_client_user_agent():

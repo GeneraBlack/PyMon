@@ -7,7 +7,6 @@ calculates SP/h improvement and next remap date.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone, timedelta
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
@@ -17,7 +16,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QProgressBar,
     QPushButton,
-    QSpinBox,
     QVBoxLayout,
     QWidget,
 )
@@ -258,7 +256,7 @@ class AttributeOptimizerWidget(QWidget):
             time_current = sum(e.training_time_seconds for e in self._plan.entries)
 
             # Recalculate plan with optimal attributes
-            from pymon.services.skill_planner import SkillPlan, PlanEntry
+            from pymon.services.skill_planner import SkillPlan
             temp_plan = SkillPlan(name="temp", entries=list(self._plan.entries))
             self.planner.calculate_plan_times(temp_plan, optimal, self._trained_skills)
             time_optimal = sum(e.training_time_seconds for e in temp_plan.entries)

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 @dataclass
@@ -77,7 +77,7 @@ class SkillQueueEntry:
     def is_training(self) -> bool:
         """Check if this skill is currently being trained."""
         if self.start_date and self.finish_date:
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             return self.start_date <= now <= self.finish_date
         return False
 
@@ -85,7 +85,7 @@ class SkillQueueEntry:
     def time_remaining(self) -> float | None:
         """Seconds remaining until training completes."""
         if self.finish_date:
-            remaining = (self.finish_date - datetime.now(timezone.utc)).total_seconds()
+            remaining = (self.finish_date - datetime.now(UTC)).total_seconds()
             return max(0.0, remaining)
         return None
 

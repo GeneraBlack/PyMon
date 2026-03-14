@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
-from datetime import datetime, timezone
-from typing import Any
+from datetime import UTC, datetime
 
 from pymon.api.assets import AssetsAPI
 from pymon.api.blueprints import BlueprintsAPI
@@ -110,7 +108,6 @@ class CharacterService:
 
         # Fetch data in parallel – each coroutine uses its own httpx client,
         # so asyncio.gather is safe here.
-        import asyncio
 
         try:
             (
@@ -161,7 +158,7 @@ class CharacterService:
             total_sp=skills_data.get("total_sp", 0),
             unallocated_sp=skills_data.get("unallocated_sp", 0),
             wallet_balance=wallet_balance if isinstance(wallet_balance, (int, float)) else 0.0,
-            last_updated=datetime.now(timezone.utc),
+            last_updated=datetime.now(UTC),
         )
 
         return character
@@ -820,7 +817,7 @@ class CharacterService:
             return None
 
         victim_data = data.get("victim", {})
-        
+
         # Parse victim items (dropped/destroyed)
         victim_items: list[KillmailItem] = []
         for item_data in victim_data.get("items", []):

@@ -11,7 +11,6 @@ from typing import Any
 
 import httpx
 import orjson
-
 from PySide6.QtCore import QThread, Signal
 
 logger = logging.getLogger(__name__)
@@ -193,13 +192,13 @@ class SDEUpdateDialog:
     """
 
     @staticmethod
-    def create(parent: Any) -> "SDEUpdateProgressDialog":
+    def create(parent: Any) -> Any:
         from PySide6.QtWidgets import (
             QDialog,
-            QVBoxLayout,
             QLabel,
             QProgressBar,
             QPushButton,
+            QVBoxLayout,
         )
 
         class SDEUpdateProgressDialog(QDialog):

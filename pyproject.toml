@@ -68,10 +68,27 @@ include = ["pymon*"]
 
 [tool.ruff]
 target-version = "py311"
-line-length = 100
+line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "UP", "B", "SIM", "RUF"]
+ignore = [
+    "RUF001",  # ambiguous unicode char in string (en-dash in German UI text)
+    "RUF002",  # ambiguous unicode char in docstring
+    "RUF003",  # ambiguous unicode char in comment
+    "RUF012",  # mutable class default (Qt-Widgets use this pattern)
+    "B905",    # zip-without-strict (Python 3.10+ strict param not always needed)
+    "SIM102",  # collapsible-if (readability preference)
+    "SIM105",  # suppressible-exception (readability preference)
+    "SIM108",  # if-else-block-instead-of-if-exp (readability)
+    "SIM114",  # if-with-same-arms (readability)
+    "E501",    # line-too-long (handled by line-length=120 + formatter)
+    "UP031",   # printf-string-formatting (legacy code)
+    "UP037",   # quoted-annotation (legacy code)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # unused imports in __init__ are re-exports
 
 [tool.mypy]
 python_version = "3.11"

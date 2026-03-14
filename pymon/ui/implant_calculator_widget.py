@@ -10,9 +10,8 @@ import logging
 from typing import Any
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont, QColor
+from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
-    QHeaderView,
     QLabel,
     QScrollArea,
     QSplitter,
@@ -202,7 +201,6 @@ class ImplantCalculatorWidget(QWidget):
             if imp["bonuses"]:
                 parts = []
                 for attr_name, val in imp["bonuses"].items():
-                    color = ATTR_COLORS.get(attr_name, Colors.TEXT_HEADING)
                     parts.append(f"+{val:.0f} {attr_name[:3].upper()}")
                 bonus_text = ", ".join(parts)
             else:

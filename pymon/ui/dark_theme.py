@@ -7,7 +7,7 @@ inherits the look automatically.  Individual widgets should **not** call
 
 from __future__ import annotations
 
-from PySide6.QtGui import QColor, QPalette, QFont
+from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import QApplication
 
 

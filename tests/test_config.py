@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 import json
-import tempfile
-from pathlib import Path
 
-from pymon.core.config import Config, DEFAULT_SCOPES
+from pymon.core.config import Config
 
 
-def test_config_defaults():
+def test_config_defaults(tmp_path):
     """Config has sensible defaults."""
-    config = Config()
+    config = Config(data_dir=tmp_path)
     assert config.client_id == ""
     assert config.language == "en"
     assert config.debug is False

@@ -13,19 +13,15 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any
 
-from PySide6.QtCore import Qt, Signal, QSize, QPropertyAnimation, QEasingCurve
-from PySide6.QtGui import QIcon, QFont, QAction
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QAction
 from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QScrollArea,
     QFrame,
-    QSizePolicy,
     QMenu,
-    QSpacerItem,
+    QPushButton,
+    QScrollArea,
+    QVBoxLayout,
+    QWidget,
 )
 
 logger = logging.getLogger(__name__)

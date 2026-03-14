@@ -13,7 +13,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from pymon.api.esi_client import ESIClient
@@ -135,7 +135,7 @@ class MarketService:
 
     async def get_global_prices(self) -> dict[int, dict[str, float]]:
         """Fetch ESI global average/adjusted prices (cached 1h)."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         if self._price_cache and self._price_cache_time:
             age = (now - self._price_cache_time).total_seconds()
             if age < 3600:
@@ -254,7 +254,7 @@ class MarketService:
             return []
 
         # Filter to recent days
-        cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
+        cutoff = (datetime.now(UTC) - timedelta(days=days)).strftime("%Y-%m-%d")
         history = []
         for day in raw:
             if day.get("date", "") >= cutoff:
@@ -401,7 +401,6 @@ class MarketService:
                     if mid in prices:
                         material_cost += prices[mid].get("average_price", 0.0) * mq
 
-            profit_per_unit = rec.sell_price - (material_cost / max(quantity, 1))
             if material_cost > 0 and rec.sell_price > 0:
                 margin = (rec.sell_price - material_cost) / rec.sell_price * 100
                 rec.margin_pct = margin

@@ -100,8 +100,8 @@ class CallbackServer:
         try:
             result = await asyncio.wait_for(self._result_future, timeout=timeout)
             return result
-        except asyncio.TimeoutError:
-            raise TimeoutError("SSO callback timed out after %d seconds" % int(timeout))
+        except TimeoutError:
+            raise TimeoutError("SSO callback timed out after %d seconds" % int(timeout)) from None
         finally:
             server.should_exit = True
             await server_task

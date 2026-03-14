@@ -27,12 +27,12 @@ from PySide6.QtWidgets import (
 from pymon.api.esi_client import ESIClient
 from pymon.sde.database import SDEDatabase
 from pymon.services.market_service import (
-    MarketService,
-    MarketSnapshot,
-    RegionComparison,
-    PriceHistoryDay,
     THE_FORGE,
     TRADE_HUBS,
+    MarketService,
+    MarketSnapshot,
+    PriceHistoryDay,
+    RegionComparison,
 )
 from pymon.ui.dark_theme import Colors
 

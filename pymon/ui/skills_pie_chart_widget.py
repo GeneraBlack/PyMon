@@ -6,16 +6,15 @@ import logging
 from collections import defaultdict
 
 import pyqtgraph as pg
-from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QFont
-
-from pymon.ui.dark_theme import Colors
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QVBoxLayout,
     QWidget,
 )
+
+from pymon.ui.dark_theme import Colors
 
 logger = logging.getLogger(__name__)
 
@@ -135,7 +134,7 @@ class SkillsPieChartWidget(QWidget):
         x_axis.setLabel("Skillpoints")
 
         # Add SP text labels on bars
-        for i, (name, sp) in enumerate(groups_reversed):
+        for i, (_name, sp) in enumerate(groups_reversed):
             pct = (sp / total_sp * 100) if total_sp > 0 else 0
             label_text = f" {_format_sp(sp)}  ({pct:.1f}%)"
             text = pg.TextItem(label_text, color=Colors.TEXT, anchor=(0, 0.5))

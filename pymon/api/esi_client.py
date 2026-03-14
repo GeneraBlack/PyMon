@@ -10,7 +10,7 @@ All ESI endpoints are accessed through this client, which handles:
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -65,7 +65,7 @@ class ESIClient:
         cache_key = f"{endpoint}:{params}"
         if cache_key in self._cache:
             data, etag, expires = self._cache[cache_key]
-            if datetime.now(timezone.utc) < expires:
+            if datetime.now(UTC) < expires:
                 logger.debug("Cache hit for %s", endpoint)
                 return data
             if etag:
@@ -87,12 +87,12 @@ class ESIClient:
         expires_str = response.headers.get("Expires", "")
         try:
             expires = datetime.strptime(expires_str, "%a, %d %b %Y %H:%M:%S %Z").replace(
-                tzinfo=timezone.utc
+                tzinfo=UTC
             )
         except (ValueError, TypeError):
             # Default: cache for 60 seconds
             from datetime import timedelta
-            expires = datetime.now(timezone.utc) + timedelta(seconds=60)
+            expires = datetime.now(UTC) + timedelta(seconds=60)
 
         self._cache[cache_key] = (data, etag, expires)
         logger.debug("Fetched %s (cached until %s)", endpoint, expires)

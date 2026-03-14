@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -57,7 +57,7 @@ def generate_ics(
         "METHOD:PUBLISH",
     ]
 
-    now_str = datetime.now(timezone.utc).strftime(_ICS_DATE_FMT)
+    now_str = datetime.now(UTC).strftime(_ICS_DATE_FMT)
 
     for entry in skill_queue:
         start_str = entry.get("start_date") or entry.get("training_start_sp")
@@ -128,7 +128,7 @@ def _parse_iso(s: str) -> datetime:
     # Try with fractional seconds first
     for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d %H:%M:%S"):
         try:
-            return datetime.strptime(s, fmt).replace(tzinfo=timezone.utc)
+            return datetime.strptime(s, fmt).replace(tzinfo=UTC)
         except ValueError:
             continue
     raise ValueError(f"Cannot parse date: {s}")

@@ -9,14 +9,12 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import UTC, datetime
 from functools import partial
-from datetime import datetime, timezone
 from pathlib import Path
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
-
-from pymon.ui.dark_theme import Colors
 from PySide6.QtWidgets import (
     QComboBox,
     QDialog,
@@ -38,15 +36,15 @@ from PySide6.QtWidgets import (
 )
 
 from pymon.core.database import Database
+from pymon.sde.database import SDEDatabase
 from pymon.services.skill_planner import (
     PlanEntry,
-    SkillInfo,
     SkillPlan,
     SkillPlanner,
     format_training_time,
 )
-from pymon.sde.database import SDEDatabase
 from pymon.ui.attribute_optimizer_widget import AttributeOptimizerWidget
+from pymon.ui.dark_theme import Colors
 from pymon.ui.loadout_import_dialog import LoadoutImportDialog
 
 logger = logging.getLogger(__name__)
@@ -878,8 +876,7 @@ class SkillPlannerWidget(QWidget):
             QMessageBox.information(self, "Drucken", "Der Plan ist leer.")
             return
 
-        from PySide6.QtPrintSupport import QPrintPreviewDialog, QPrinter
-        from PySide6.QtGui import QTextDocument
+        from PySide6.QtPrintSupport import QPrinter, QPrintPreviewDialog
 
         printer = QPrinter(QPrinter.PrinterMode.HighResolution)
         printer.setPageOrientation(QPrinter.Orientation.Portrait)
@@ -917,8 +914,7 @@ class SkillPlannerWidget(QWidget):
         html += f"<h1>Skill Plan: {self._plan.name}</h1>"
         html += f"<h3>{len(self._plan.entries)} Skills | Gesamt: {self._plan.total_display}</h3>"
 
-        from datetime import datetime, timezone
-        html += f"<p style='color:#777'>Erstellt: {datetime.now(timezone.utc):%Y-%m-%d %H:%M} UTC</p>"
+        html += f"<p style='color:#777'>Erstellt: {datetime.now(UTC):%Y-%m-%d %H:%M} UTC</p>"
 
         html += (
             "<table>"

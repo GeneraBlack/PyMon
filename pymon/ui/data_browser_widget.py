@@ -8,10 +8,8 @@ from __future__ import annotations
 import logging
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QComboBox,
-    QGroupBox,
     QHBoxLayout,
     QHeaderView,
     QLabel,

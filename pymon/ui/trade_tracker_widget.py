@@ -6,7 +6,7 @@ import asyncio
 import logging
 from typing import Any
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
     QGroupBox,
@@ -140,7 +140,6 @@ class TradeTrackerWidget(QWidget):
     def _do_analysis_sync(self, transactions: list[dict[str, Any]]) -> None:
         """Synchronous fallback when no loop is available."""
         # Build a simple analysis without async calls
-        from pymon.services.market_service import MarketService
         buys: dict[int, list[dict]] = {}
         sells: dict[int, list[dict]] = {}
 

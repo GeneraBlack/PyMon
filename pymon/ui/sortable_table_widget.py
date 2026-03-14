@@ -16,8 +16,6 @@ from typing import Any
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QAction, QFont
-
-from pymon.ui.dark_theme import Colors
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
@@ -30,6 +28,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from pymon.ui.dark_theme import Colors
 
 logger = logging.getLogger(__name__)
 

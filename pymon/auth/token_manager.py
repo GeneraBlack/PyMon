@@ -7,7 +7,7 @@ automatic token refresh before expiry.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from pymon.auth.sso import EVEAuth, SSOResult
 from pymon.core.database import Database
@@ -27,7 +27,7 @@ class TokenManager:
 
     def store_tokens(self, result: SSOResult) -> None:
         """Store tokens for a character after SSO login."""
-        expiry = datetime.now(timezone.utc) + timedelta(seconds=result.expires_in)
+        expiry = datetime.now(UTC) + timedelta(seconds=result.expires_in)
 
         self.db.conn.execute(
             """
@@ -79,7 +79,7 @@ class TokenManager:
             return access_token
 
         expiry = datetime.fromisoformat(expiry_str)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         # If token is still valid (with margin), return it
         if now + self.REFRESH_MARGIN < expiry:

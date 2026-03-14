@@ -12,10 +12,9 @@ import logging
 from typing import Any
 
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPen
+from PySide6.QtGui import QBrush, QColor
 from PySide6.QtWidgets import (
     QAbstractItemView,
-    QGroupBox,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -27,9 +26,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-logger = logging.getLogger(__name__)
-
 from pymon.ui.dark_theme import Colors
+
+logger = logging.getLogger(__name__)
 
 DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
 HOURS = [f"{h:02d}:00" for h in range(24)]

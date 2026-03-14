@@ -7,22 +7,21 @@ using pyqtgraph, integrated into the Wallet tab.
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 import pyqtgraph as pg
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont, QColor
-
-from pymon.ui.dark_theme import Colors
+from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
-
     QComboBox,
     QHBoxLayout,
     QLabel,
     QVBoxLayout,
     QWidget,
 )
+
+from pymon.ui.dark_theme import Colors
 
 logger = logging.getLogger(__name__)
 
@@ -117,7 +116,7 @@ class WalletChartWidget(QWidget):
         range_text = self.range_combo.currentText()
         if range_text != "Alles" and journal:
             days = {"7 Tage": 7, "14 Tage": 14, "30 Tage": 30}.get(range_text, 999)
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             journal = [
                 j for j in journal
                 if (now - _parse_date(j.date)).days <= days
@@ -212,12 +211,12 @@ def _parse_date(date_str: str | datetime) -> datetime:
     """Parse an ISO date string or pass through a datetime."""
     if isinstance(date_str, datetime):
         if date_str.tzinfo is None:
-            return date_str.replace(tzinfo=timezone.utc)
+            return date_str.replace(tzinfo=UTC)
         return date_str
     try:
         return datetime.fromisoformat(date_str.replace("Z", "+00:00"))
     except (ValueError, AttributeError):
-        return datetime.now(timezone.utc)
+        return datetime.now(UTC)
 
 
 class _DateTimeAxis(pg.AxisItem):

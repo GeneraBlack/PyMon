@@ -11,7 +11,6 @@ from PySide6.QtWidgets import (
     QDialog,
     QHBoxLayout,
     QLabel,
-    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QTreeWidget,
@@ -21,8 +20,7 @@ from PySide6.QtWidgets import (
 )
 
 from pymon.sde.database import SDEDatabase
-from pymon.services.skill_planner import PlanEntry, SkillPlan, SkillPlanner
-from pymon.ui.dark_theme import Colors
+from pymon.services.skill_planner import PlanEntry, SkillPlanner
 
 logger = logging.getLogger(__name__)
 
@@ -212,7 +210,7 @@ class LoadoutImportDialog(QDialog):
         self._plan_entries.clear()
 
         # Collect all unique type names (ship + modules)
-        all_names = [fitting.ship_name] + fitting.module_names
+        all_names = [fitting.ship_name, *fitting.module_names]
         unique_names = list(dict.fromkeys(all_names))  # preserve order, deduplicate
 
         total_skills = 0
