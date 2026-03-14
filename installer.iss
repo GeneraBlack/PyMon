@@ -67,4 +67,4 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 
 [UninstallDelete]
 ; Clean up app data cache on uninstall (optional)
-Type: filesandirs; Name: "{localappdata}\{#MyAppName}\cache"
+Type: filesanddirs; Name: "{localappdata}\{#MyAppName}\cache"
